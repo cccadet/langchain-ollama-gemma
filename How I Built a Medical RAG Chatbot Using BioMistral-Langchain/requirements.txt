@@ -1,0 +1,6 @@
+langchain
+sentence-transformers
+chromadb
+# llama-cpp-python #linux-only
+langchain_community
+pypdf

@@ -97,7 +97,7 @@ tools = [vectorestore_tool]
 #)
 
 llm = Ollama(base_url='http://localhost:11434',
-model="mistral:7b")
+model="gemma:2b")
 
 # setup ReAct style prompt
 prompt = hub.pull("hwchase17/react-json")

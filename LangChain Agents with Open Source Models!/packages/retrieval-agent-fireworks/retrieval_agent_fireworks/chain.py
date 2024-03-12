@@ -15,6 +15,9 @@ from langchain_core.retrievers import BaseRetriever
 
 from langchain_community.llms import Ollama  
 
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 MODEL_ID = "accounts/fireworks/models/mixtral-8x7b-instruct"
 
 
@@ -66,7 +69,21 @@ description = (
     "Input should be a search query."
 )
 arxiv_tool = create_retriever_tool(ArxivRetriever(), "arxiv", description)
-tools = [arxiv_tool]
+
+embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
+vectorestore = Chroma(embedding_function=embeddings, persist_directory="./chroma_db")
+vectorestore_retriever = vectorestore.as_retriever()
+
+vectorestore_tool_description = (
+    "A tool that look up documentation about the langchain expression Language."
+    "Use this tool to look anything up about LCEL or the Runnable Interface"
+)
+
+vectorestore_tool = create_retriever_tool(
+    vectorestore_retriever, "docstore", vectorestore_tool_description
+    )
+
+tools = [vectorestore_tool]
 
 # Set up LLM
 #llm = ChatFireworks(
@@ -80,7 +97,7 @@ tools = [arxiv_tool]
 #)
 
 llm = Ollama(base_url='http://localhost:11434',
-model="mistral:7b",cache=True)
+model="mistral:7b")
 
 # setup ReAct style prompt
 prompt = hub.pull("hwchase17/react-json")

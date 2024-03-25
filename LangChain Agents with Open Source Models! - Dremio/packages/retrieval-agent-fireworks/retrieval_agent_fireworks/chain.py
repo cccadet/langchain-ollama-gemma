@@ -73,11 +73,11 @@ arxiv_tool = create_retriever_tool(ArxivRetriever(), "arxiv", description)
 
 embeddings = OllamaEmbeddings(model='nomic-embed-text:v1.5')
 vectorestore = Chroma(embedding_function=embeddings, persist_directory="./chroma_db")
-vectorestore_retriever = vectorestore.as_retriever(search_kwargs={"k": 1})
+vectorestore_retriever = vectorestore.as_retriever(search_kwargs={"k": 3})
 
 vectorestore_tool_description = (
-    "A tool that look up documentation about the langchain expression Language."
-    "Use this tool to look anything up about LCEL or the Runnable Interface"
+    "A tool that look up documentation about the dremio."
+    "Use this tool to look anything up about Dremio and its features and parameters. "
 )
 
 vectorestore_tool = create_retriever_tool(
@@ -97,7 +97,7 @@ tools = [vectorestore_tool]
 #    cache=True,
 #)
 
-llm = Ollama(model="gemma:2b")
+llm = Ollama(model="gemma:7b")
 
 # setup ReAct style prompt
 prompt = hub.pull("hwchase17/react-json")
